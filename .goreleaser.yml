@@ -1,0 +1,11 @@
+# .goreleaser.yml
+project_name: vmware_exporter
+builds:
+  - env: [CGO_ENABLED=0]
+    goos:
+      - linux
+    goarch:
+      - amd64
+    id: "vmware_exporter"
+    dir: .
+    main: ./

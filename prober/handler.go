@@ -70,12 +70,14 @@ func Handler(w http.ResponseWriter, r *http.Request, c config.Config, logger *sl
 
 	target := r.URL.Query().Get("target")
 	if target == "" {
+		logger.Error("Target parameter is missing")
 		http.Error(w, fmt.Sprintf("Target parameter is missing"), http.StatusBadRequest)
 		return
 	}
 
 	dc := r.URL.Query().Get("dc")
 	if dc == "" {
+		logger.Error("DC parameter is missing")
 		http.Error(w, fmt.Sprintf("DC parameter is missing"), http.StatusBadRequest)
 		return
 	}
@@ -89,18 +91,21 @@ func Handler(w http.ResponseWriter, r *http.Request, c config.Config, logger *sl
 
 	sessionId, err := vcenterApi.Authenticate()
 	if err != nil {
+		logger.Error("Authentication failure", slog.Any("err_msg", err))
 		http.Error(w, fmt.Sprintf("%s", err), http.StatusBadRequest)
 		return
 	}
 
 	vcenterDC, err := vcenterApi.GetDatacenter(sessionId)
 	if err != nil {
+		logger.Error("Get Datacenter error", slog.Any("err_msg", err))
 		http.Error(w, fmt.Sprintf("%s", err), http.StatusBadRequest)
 		return
 	}
 
 	datastoreMetrics, err := vcenterApi.GetDatastores(sessionId)
 	if err != nil {
+		logger.Error("Get datastore error", slog.Any("err_msg", err))
 		http.Error(w, fmt.Sprintf("%s", err), http.StatusBadRequest)
 		return
 	}
@@ -114,6 +119,7 @@ func Handler(w http.ResponseWriter, r *http.Request, c config.Config, logger *sl
 
 	hostMetrics, err := vcenterApi.GetHosts(sessionId)
 	if err != nil {
+		logger.Error("Get hosts error", slog.Any("err_msg", err))
 		http.Error(w, fmt.Sprintf("%s", err), http.StatusBadRequest)
 		return
 	}

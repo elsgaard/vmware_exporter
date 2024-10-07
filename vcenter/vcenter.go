@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type Model struct {
@@ -44,13 +45,18 @@ func (m *Model) GetDatastores(sessionId string) ([]Datastore, error) {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 
-	client := &http.Client{Transport: tr}
+	client := &http.Client{
+		Transport: tr,
+		Timeout:   10 * time.Second,
+	}
 
 	addr := fmt.Sprintf("%s:%s", m.Host, m.Port)
 	req, err := http.NewRequest("GET", "https://"+addr+"/api/vcenter/datastore?datacenters="+m.DC, nil)
 	if err != nil {
 		return msg, err
 	}
+
+	req.Close = true
 
 	sessionId = strings.Trim(sessionId, "\"")
 	req.Header.Set("vmware-api-session-id", sessionId)
@@ -84,13 +90,18 @@ func (m *Model) GetDatacenter(sessionId string) ([]VcenterDatacenter, error) {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 
-	client := &http.Client{Transport: tr}
+	client := &http.Client{
+		Transport: tr,
+		Timeout:   10 * time.Second,
+	}
 
 	addr := fmt.Sprintf("%s:%s", m.Host, m.Port)
 	req, err := http.NewRequest("GET", "https://"+addr+"/api/vcenter/datacenter?datacenters="+m.DC, nil)
 	if err != nil {
 		return msg, err
 	}
+
+	req.Close = true
 
 	sessionId = strings.Trim(sessionId, "\"")
 	req.Header.Set("vmware-api-session-id", sessionId)
@@ -125,13 +136,18 @@ func (m *Model) GetHosts(sessionId string) ([]Host, error) {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 
-	client := &http.Client{Transport: tr}
+	client := &http.Client{
+		Transport: tr,
+		Timeout:   10 * time.Second,
+	}
 
 	addr := fmt.Sprintf("%s:%s", m.Host, m.Port)
 	req, err := http.NewRequest("GET", "https://"+addr+"/api/vcenter/host?datacenters="+m.DC, nil)
 	if err != nil {
 		return host, err
 	}
+
+	req.Close = true
 
 	sessionId = strings.Trim(sessionId, "\"")
 	req.Header.Set("vmware-api-session-id", sessionId)
@@ -164,13 +180,18 @@ func (m *Model) Authenticate() (string, error) {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 
-	client := &http.Client{Transport: tr}
+	client := &http.Client{
+		Transport: tr,
+		Timeout:   10 * time.Second,
+	}
 
 	addr := fmt.Sprintf("%s:%s", m.Host, m.Port)
 	req, err := http.NewRequest("POST", "https://"+addr+"/api/session", nil)
 	if err != nil {
 		return "", err
 	}
+
+	req.Close = true
 
 	req.Header.Add("Authorization", "Basic "+basicAuth(m.User, m.Pass))
 
@@ -197,13 +218,18 @@ func (m *Model) LogOut(sessionId string) {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 
-	client := &http.Client{Transport: tr}
+	client := &http.Client{
+		Transport: tr,
+		Timeout:   10 * time.Second,
+	}
 
 	addr := fmt.Sprintf("%s:%s", m.Host, m.Port)
 	req, err := http.NewRequest("DELETE", "https://"+addr+"/api/session", nil)
 	if err != nil {
 		return
 	}
+
+	req.Close = true
 
 	sessionId = strings.Trim(sessionId, "\"")
 	req.Header.Set("vmware-api-session-id", sessionId)

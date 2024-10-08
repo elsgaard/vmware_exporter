@@ -26,7 +26,6 @@ func main() {
 	envConfig := config.Config{
 		VcenterUser: env.GetStringOrDefault("VCENTER_USER", ""),
 		VcenterPass: env.GetStringOrDefault("VCENTER_PASS", ""),
-		VcenterDC:   env.GetStringOrDefault("VCENTER_DC", ""),
 	}
 
 	http.HandleFunc("/probe", func(w http.ResponseWriter, r *http.Request) {

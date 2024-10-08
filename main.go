@@ -26,7 +26,6 @@ func main() {
 	envConfig := config.Config{
 		VcenterUser: env.GetStringOrDefault("VCENTER_USER", ""),
 		VcenterPass: env.GetStringOrDefault("VCENTER_PASS", ""),
-		VcenterHost: env.GetStringOrDefault("VCENTER_HOST", ""),
 		VcenterDC:   env.GetStringOrDefault("VCENTER_DC", ""),
 	}
 

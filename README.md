@@ -56,8 +56,36 @@ Development requirements:
     VCENTER_USER
     VCENTER_PASS
 
-## Prometheus configuration
+## Installation
+```console
+sudo useradd --no-create-home --shell /bin/false vmwareexporter
+sudo mkdir /opt/vmware_exporter
+sudo tar -xvf vmware_exporter_0.0.2_linux_amd64.tar.gz
+sudo chmod 755 vmwareexporter
+sudo chown vmwareexporter:vmwareexporter /opt/vmware_exporter/*
+sudo ln -s /opt/vmware_exporter/vmwareexporterserver /usr/local/bin/vmwareexporterserver
 
+sudo tee /etc/systemd/system/vmware_exporter.service <<EOF
+[Unit]
+Description=VMWare Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/vmware_exporter
+ExecStart=/opt/vmware_exporter/vmwareexporterserver
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl enable --now vmware_exporter.service 
+```
+
+## Prometheus configuration
 ```yaml
   - job_name: 'vmware_exporter'
     metrics_path: /probe
@@ -73,4 +101,22 @@ Development requirements:
         target_label: instance
       - target_label: __address__
         replacement: 127.0.0.1:9141
+```
+
+## Filebeat configuration
+```console
+- type: journald
+  enabled: true
+  pipeline: filebeat
+  id: service-vmware-exporter
+  include_matches.match:
+    - _SYSTEMD_UNIT=vmware_exporter.service
+  fields:
+    type: vmwareexporter.server
+
+  parsers:
+    - ndjson:
+      overwrite_keys: true
+      add_error_key: true
+      expand_keys: true
 ```

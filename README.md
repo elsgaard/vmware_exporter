@@ -74,7 +74,7 @@ After=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/vmware_exporter
-ExecStart=/opt/vmware_exporter/vmwareexporterserver
+ExecStart=/usr/local/bin/vmwareexporterserver
 
 Restart=always
 

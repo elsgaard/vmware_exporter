@@ -35,7 +35,7 @@ func main() {
 	logger.Info("VMWare Exporter Starting", "binding_address", address)
 
 	if err := http.ListenAndServe(address, nil); err != nil {
-		slog.Error("Error starting server")
+		logger.Error("VMWare Exporter Start failed", "binding_address", address)
 	}
 
 }

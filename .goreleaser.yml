@@ -9,3 +9,4 @@ builds:
     id: "vmware_exporter"
     dir: .
     main: ./
+    binary: vmwareexporterserver

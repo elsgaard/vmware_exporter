@@ -60,8 +60,9 @@ Development requirements:
 ```console
 sudo useradd --no-create-home --shell /bin/false vmwareexporter
 sudo mkdir /opt/vmware_exporter
+cd /opt/vmware_exporter
 sudo tar -xvf vmware_exporter_0.0.2_linux_amd64.tar.gz
-sudo chmod 755 vmwareexporter
+sudo chmod 755 vmwareexporterserver
 sudo chown vmwareexporter:vmwareexporter /opt/vmware_exporter/*
 sudo ln -s /opt/vmware_exporter/vmwareexporterserver /usr/local/bin/vmwareexporterserver
 

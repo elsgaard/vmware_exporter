@@ -64,7 +64,7 @@ cd /opt/vmware_exporter
 sudo tar -xvf vmware_exporter_1.0.8_linux_amd64.tar.gz
 sudo chmod 755 vmwareexporterserver
 sudo chown vmwareexporter:vmwareexporter /opt/vmware_exporter/*
-sudo ln -s /opt/vmware_exporter/vmwareexporterserver /usr/local/bin/vmwareexporterserver
+sudo ln -s /opt/vmware_exporter/vmwareexporterserver /usr/bin/vmwareexporterserver
 
 sudo tee /etc/systemd/system/vmware_exporter.service <<EOF
 [Unit]
@@ -75,7 +75,7 @@ After=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/vmware_exporter
-ExecStart=/usr/local/bin/vmwareexporterserver
+ExecStart=/usr/bin/vmwareexporterserver
 
 Restart=always
 
